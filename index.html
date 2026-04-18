@@ -192,6 +192,17 @@
   .toast.show { transform: translateX(-50%) translateY(0); }
 
   .loading { text-align: center; padding: 20px; color: var(--muted); font-weight: 700; font-size: 13px; }
+
+  /* Admin */
+  .admin-toggle { text-align: center; margin-top: 10px; }
+  .admin-toggle button { background: none; border: none; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; text-decoration: underline; font-family: 'Nunito', sans-serif; }
+  .admin-box { background: #FFF8EC; border: 2px dashed var(--sand); border-radius: 12px; padding: 12px 14px; margin-top: 10px; display: none; }
+  .admin-box.show { display: block; }
+  .admin-box label { font-size: 12px; font-weight: 800; color: var(--brown); display: block; margin-bottom: 6px; }
+  .admin-input { width: 100%; padding: 8px 12px; border: 2px solid var(--sand); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; outline: none; background: white; color: var(--text); }
+  .admin-input:focus { border-color: var(--accent); }
+  .delete-btn { font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 20px; border: 2px solid #F09060; background: #FFE8D8; color: #C04000; cursor: pointer; transition: all 0.15s; font-family: 'Nunito', sans-serif; }
+  .delete-btn:hover { background: #C04000; color: white; border-color: #C04000; }
 </style>
 </head>
 <body>
@@ -290,7 +301,11 @@
   </div>
 
   <div class="panel-bottom">
-    <button class="btn-submit" id="submitBtn" onclick="submitVote()">🌟 送出投票</button>
+    <div class="edit-hint" id="editHint">✏️ 想修改？輸入同樣的名字再送出，會自動覆蓋</div>
+    <div class="btn-row">
+      <button class="btn-submit" id="submitBtn" onclick="submitVote()" style="flex:2">🌟 送出投票</button>
+      <button class="btn-clear" onclick="clearForm()">🗑 清空</button>
+    </div>
     <button class="btn-results" onclick="toggleResults()">📊 查看所有人的投票結果</button>
   </div>
 
@@ -314,6 +329,14 @@
         <div id="dateResultList"><div class="loading">載入中…</div></div>
         <div class="r-section-title" style="margin-top:14px;">👥 所有成員</div>
         <div id="voterList"><div class="loading">載入中…</div></div>
+
+        <div class="admin-toggle">
+          <button onclick="toggleAdmin()">🔑 管理員刪票</button>
+        </div>
+        <div class="admin-box" id="adminBox">
+          <label>管理員密碼</label>
+          <input class="admin-input" type="password" id="adminPw" placeholder="輸入密碼…">
+        </div>
       </div>
     </div>
   </div>
@@ -408,7 +431,7 @@ function selTime(e, k, time) {
   });
 });
 
-// ── 送出投票 ──
+// ── 送出投票（支援覆蓋修改）──
 async function submitVote() {
   const name = document.getElementById('nameInput').value.trim();
   if (!name) { toast('🌱 請先輸入你的名字！'); return; }
@@ -418,13 +441,10 @@ async function submitVote() {
   btn.disabled = true;
   btn.textContent = '送出中…';
 
-  // 檢查是否已投票
+  // 檢查是否已投票 → 若有則刪除舊的（覆蓋）
   const { data: existing } = await sb.from('votes').select('id').eq('name', name);
   if (existing && existing.length > 0) {
-    toast('✅ ' + name + ' 已經投過票囉！');
-    btn.disabled = false;
-    btn.textContent = '🌟 送出投票';
-    return;
+    await sb.from('votes').delete().eq('name', name);
   }
 
   const { error } = await sb.from('votes').insert({
@@ -440,23 +460,34 @@ async function submitVote() {
     toast('❌ 送出失敗，請再試一次');
     console.error(error);
   } else {
-    toast('🌟 ' + name + ' 投票成功！');
-    // reset
-    document.getElementById('nameInput').value = '';
-    Object.keys(sel).forEach(k => delete sel[k]);
-    document.querySelectorAll('.date-card').forEach(c => c.classList.remove('selected'));
-    document.querySelectorAll('.time-pill').forEach(p => { if(p.textContent !== '🌙 晚上') p.classList.remove('active'); });
-    ['drink','veg','allergy'].forEach(id => {
-      document.getElementById(id+'Check').checked = false;
-      document.getElementById('pc-'+id).classList.remove('on');
-    });
-    document.getElementById('allergyInput').value = '';
-    document.getElementById('allergyExpand').classList.remove('show');
+    const isEdit = existing && existing.length > 0;
+    toast(isEdit ? '✏️ ' + name + ' 的投票已更新！' : '🌟 ' + name + ' 投票成功！');
+    resetForm();
+    document.getElementById('editHint').classList.add('show');
     if (document.getElementById('resultsWrap').classList.contains('show')) renderResults();
   }
 
   btn.disabled = false;
   btn.textContent = '🌟 送出投票';
+}
+
+// ── 清空表單 ──
+function clearForm() {
+  resetForm();
+  toast('🗑 已清空，重新選吧！');
+}
+
+function resetForm() {
+  document.getElementById('nameInput').value = '';
+  Object.keys(sel).forEach(k => delete sel[k]);
+  document.querySelectorAll('.date-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.time-pill').forEach(p => { if(p.textContent !== '🌙 晚上') p.classList.remove('active'); });
+  ['drink','veg','allergy'].forEach(id => {
+    document.getElementById(id+'Check').checked = false;
+    document.getElementById('pc-'+id).classList.remove('on');
+  });
+  document.getElementById('allergyInput').value = '';
+  document.getElementById('allergyExpand').classList.remove('show');
 }
 
 // ── 查看結果 ──
@@ -507,13 +538,45 @@ async function renderResults() {
   document.getElementById('voterList').innerHTML = votes.length===0
     ? '<p style="color:#999;font-size:13px;font-weight:600">還沒有人投票 🌱</p>'
     : votes.map(v=>`
-        <div class="voter-row">
-          <span class="voter-name">${v.name}</span>
-          ${v.drink?'<span class="tag drink">🍺 喝酒</span>':''}
-          ${v.veg?'<span class="tag veg">🌿 素食</span>':''}
-          ${v.allergy?`<span class="tag allergy">⚠️ ${v.allergy_note||'有忌食'}</span>`:''}
-          <span style="margin-left:auto;font-size:11px;color:#999;font-weight:600">${(v.dates||[]).length}日</span>
+        <div id="vrow-${v.id}" style="padding:8px 0;border-bottom:1px dashed var(--sand);">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;">
+            <span style="font-weight:800;color:var(--text);min-width:55px;">${v.name}</span>
+            ${v.drink?'<span class="tag drink">🍺 喝酒</span>':''}
+            ${v.veg?'<span class="tag veg">🌿 素食</span>':''}
+            ${v.allergy?`<span class="tag allergy">⚠️ ${v.allergy_note||'有忌食'}</span>`:''}
+            <span style="margin-left:auto;font-size:11px;color:#999;font-weight:600;">${(v.dates||[]).length}日</span>
+          </div>
+          <button class="delete-btn" onclick="deleteVote('${v.id}','${v.name}')">🗑 刪除此人投票</button>
         </div>`).join('');
+}
+
+// ── 管理員 ──
+const ADMIN_PW = 'g7admin'; // ← 你的管理員密碼，可以改
+
+function toggleAdmin() {
+  document.getElementById('adminBox').classList.toggle('show');
+}
+
+async function deleteVote(id, name) {
+  const pw = document.getElementById('adminPw').value;
+  if (!document.getElementById('adminBox').classList.contains('show')) {
+    toast('🔑 請先展開管理員區輸入密碼');
+    document.getElementById('adminBox').classList.add('show');
+    return;
+  }
+  if (pw !== ADMIN_PW) {
+    toast('❌ 密碼錯誤！');
+    return;
+  }
+  if (!confirm('確定刪除 ' + name + ' 的投票？')) return;
+
+  const { error } = await sb.from('votes').delete().eq('id', id);
+  if (error) {
+    toast('❌ 刪除失敗');
+  } else {
+    toast('🗑 已刪除 ' + name + ' 的投票');
+    renderResults();
+  }
 }
 
 function toast(msg) {
