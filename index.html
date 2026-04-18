@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EiMBA 四季會 G7</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #B8DFF0;
+    --sky2: #D4EDFA;
+    --grass: #7DBF6E;
+    --grass2: #A8D896;
+    --soil: #C4956A;
+    --soil2: #DDB88A;
+    --leaf: #4A9940;
+    --leaf2: #3A7A30;
+    --cream: #FFF8EC;
+    --warm: #FFF0D4;
+    --brown: #6B4423;
+    --brown2: #8B5A2B;
+    --sand: #EDD9B0;
+    --sand2: #F5E8CC;
+    --white: #FFFDF8;
+    --muted: #8B7355;
+    --text: #3A2A15;
+    --accent: #E8763A;
+    --accent2: #F59B5A;
+    --blue: #5AABF6;
+    --purple: #B088D0;
+    --pink: #F0A0B8;
+    --yellow: #F5D020;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--sky);
+    font-family: 'Nunito', 'Noto Sans TC', sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Animated sky clouds */
+  .clouds {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 120px;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50px;
+    opacity: 0.8;
+  }
+
+  .cloud::before, .cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .c1 { width: 80px; height: 30px; top: 20px; animation: drift 25s linear infinite; left: -100px; }
+  .c1::before { width: 40px; height: 40px; top: -20px; left: 10px; }
+  .c1::after { width: 30px; height: 30px; top: -12px; left: 35px; }
+
+  .c2 { width: 60px; height: 22px; top: 50px; animation: drift 35s linear infinite 10s; left: -80px; }
+  .c2::before { width: 30px; height: 30px; top: -16px; left: 8px; }
+  .c2::after { width: 24px; height: 24px; top: -10px; left: 28px; }
+
+  .c3 { width: 100px; height: 35px; top: 10px; animation: drift 28s linear infinite 5s; left: -120px; }
+  .c3::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+  .c3::after { width: 38px; height: 38px; top: -18px; left: 48px; }
+
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(100vw + 150px)); }
+  }
+
+  /* Ground tiles at top */
+  .ground-top {
+    position: relative;
+    z-index: 1;
+    padding-top: 80px;
+    background: linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 60%, var(--grass2) 100%);
+  }
+
+  /* Tile row */
+  .tile-row {
+    display: flex;
+    overflow: hidden;
+    height: 32px;
+  }
+
+  .tile {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    background-size: 32px 32px;
+  }
+
+  .tile-grass {
+    background-color: var(--grass);
+    background-image: 
+      radial-gradient(circle at 8px 8px, var(--grass2) 3px, transparent 3px),
+      radial-gradient(circle at 22px 20px, var(--leaf) 2px, transparent 2px),
+      radial-gradient(circle at 16px 14px, var(--grass2) 2px, transparent 2px);
+  }
+
+  .tile-soil {
+    background-color: var(--soil);
+    background-image:
+      radial-gradient(circle at 10px 10px, var(--soil2) 4px, transparent 4px),
+      radial-gradient(circle at 24px 22px, rgba(255,255,255,0.15) 3px, transparent 3px);
+  }
+
+  .tile-stone {
+    background-color: #B0A090;
+    background-image:
+      linear-gradient(135deg, #C0B0A0 0%, #A09080 50%, #B0A090 100%);
+  }
+
+  /* Main container */
+  .container {
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Header sign */
+  .sign-post {
+    text-align: center;
+    padding: 0 20px 0;
+    position: relative;
+  }
+
+  .sign-pole {
+    width: 14px;
+    height: 40px;
+    background: linear-gradient(to right, var(--brown), var(--brown2), var(--brown));
+    margin: 0 auto;
+    border-radius: 3px;
+  }
+
+  .sign-board {
+    background: linear-gradient(135deg, #E8C870, #D4B050, #C8A840);
+    border: 4px solid var(--brown);
+    border-radius: 12px;
+    padding: 16px 24px 18px;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--brown2), inset 0 2px 4px rgba(255,255,255,0.3);
+    margin: 0 20px;
+  }
+
+  .sign-board::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  .sign-subtitle {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--brown2);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .sign-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--brown);
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.4);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .sign-g7 {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--brown2);
+    letter-spacing: 2px;
+  }
+
+  /* Ditto floating decoration */
+  .ditto-float {
+    position: absolute;
+    right: 30px;
+    top: -10px;
+    font-size: 36px;
+    animation: dittoFloat 3s ease-in-out infinite;
+    filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.15));
+  }
+
+  @keyframes dittoFloat {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-8px) rotate(5deg); }
+  }
+
+  /* Main content panel */
+  .panel {
+    background: var(--cream);
+    margin: 0 12px 0;
+    border-radius: 20px 20px 0 0;
+    border: 3px solid var(--sand);
+    border-bottom: none;
+    padding: 20px 18px;
+    box-shadow: 0 -4px 20px rgba(100,70,30,0.1);
+    min-height: 60vh;
+  }
+
+  /* Section headers */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    margin-top: 20px;
+  }
+
+  .section-head:first-child { margin-top: 0; }
+
+  .section-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--grass);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 2px 2px 0 var(--leaf2);
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--brown);
+    letter-spacing: 0.5px;
+  }
+
+  /* Input box */
+  .input-box {
+    background: var(--white);
+    border: 3px solid var(--sand);
+    border-radius: 14px;
+    padding: 2px;
+    box-shadow: inset 0 2px 4px rgba(180,140,80,0.1), 3px 3px 0 var(--sand);
+    margin-bottom: 4px;
+  }
+
+  .name-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 11px;
+    background: transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    outline: none;
+  }
+
+  .name-input::placeholder { color: var(--sand); font-weight: 600; }
+
+  /* Month label */
+  .month-banner {
+    background: linear-gradient(90deg, var(--grass), var(--grass2));
+    border-radius: 10px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    color: white;
+    text-shadow: 1px 1px 0 var(--leaf2);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 2px 2px 0 var(--leaf2);
+  }
+
+  /* Date grid */
+  .dates-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .date-card {
+    background: var(--white);
+    border: 3px solid var(--sand);
+    border-radius: 14px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 3px 3px 0 var(--sand);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .date-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--grass2), var(--grass));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .date-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 3px 5px 0 var(--sand);
+    border-color: var(--grass);
+  }
+
+  .date-card.selected {
+    background: linear-gradient(135deg, #E8F8E0, #D0F0C0);
+    border-color: var(--grass);
+    box-shadow: 3px 3px 0 var(--leaf2);
+  }
+
+  .date-card.selected::before { opacity: 1; }
+
+  .date-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .date-num {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .date-card.selected .date-num { color: var(--leaf2); }
+
+  .day-chip {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 20px;
+    line-height: 1.4;
+  }
+
+  .day-chip.weekend {
+    background: linear-gradient(135deg, #FFE08A, #F5C830);
+    color: #7A5500;
+    box-shadow: 1px 1px 0 #C49800;
+  }
+
+  .day-chip.weekday {
+    background: linear-gradient(135deg, var(--sky2), var(--sky));
+    color: #2050A0;
+    box-shadow: 1px 1px 0 #4090D0;
+  }
+
+  .time-row {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .time-pill {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 2px solid var(--sand);
+    background: var(--sand2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .time-pill:hover { border-color: var(--grass); color: var(--leaf2); }
+
+  .time-pill.active {
+    background: var(--grass);
+    border-color: var(--leaf2);
+    color: white;
+    box-shadow: 1px 1px 0 var(--leaf2);
+  }
+
+  .date-card.selected .time-pill {
+    background: rgba(255,255,255,0.7);
+    border-color: var(--grass2);
+  }
+
+  .date-card.selected .time-pill.active {
+    background: var(--leaf);
+    border-color: var(--leaf2);
+    color: white;
+  }
+
+  /* Pref cards */
+  .pref-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px; }
+
+  .pref-card {
+    background: var(--white);
+    border: 3px solid var(--sand);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 3px 3px 0 var(--sand);
+    transition: border-color 0.2s;
+  }
+
+  .pref-card.on { border-color: var(--grass); box-shadow: 3px 3px 0 var(--leaf2); }
+
+  .pref-emoji { font-size: 22px; flex-shrink: 0; }
+
+  .pref-info { flex: 1; }
+
+  .pref-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 1px;
+  }
+
+  .pref-hint { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+  /* Toggle */
+  .toggle-wrap {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+
+  .toggle-wrap input { display: none; }
+
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--sand);
+    border-radius: 30px;
+    border: 2px solid var(--sand);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .toggle-wrap input:checked + .toggle-track {
+    background: var(--grass);
+    border-color: var(--leaf);
+  }
+
+  .toggle-wrap input:checked + .toggle-track::after { transform: translateX(20px); }
+
+  .allergy-expand {
+    display: none;
+    margin-top: 8px;
+  }
+
+  .allergy-expand.show { display: block; }
+
+  .allergy-textarea {
+    width: 100%;
+    background: var(--white);
+    border: 3px solid var(--sand);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    height: 72px;
+    box-shadow: inset 0 2px 4px rgba(180,140,80,0.08);
+    transition: border-color 0.2s;
+  }
+
+  .allergy-textarea:focus { border-color: var(--grass); }
+  .allergy-textarea::placeholder { color: var(--sand); }
+
+  /* Submit button */
+  .btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--grass), var(--leaf));
+    color: white;
+    border: 3px solid var(--leaf2);
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--leaf2), 0 8px 20px rgba(74,153,64,0.3);
+    transition: all 0.15s;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--leaf2), 0 12px 24px rgba(74,153,64,0.4); }
+  .btn-submit:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--leaf2); }
+  .btn-submit:disabled { background: var(--sand); border-color: var(--sand2); box-shadow: 0 4px 0 var(--sand2); }
+
+  .btn-results {
+    width: 100%;
+    padding: 12px;
+    background: var(--sand2);
+    color: var(--brown);
+    border: 3px solid var(--sand);
+    border-radius: 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 3px 0 var(--sand);
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-results:hover { background: var(--sand); transform: translateY(-1px); }
+
+  /* Bottom ground */
+  .panel-bottom {
+    background: var(--cream);
+    margin: 0 12px;
+    border-radius: 0 0 20px 20px;
+    border: 3px solid var(--sand);
+    border-top: none;
+    padding: 16px 18px 20px;
+    box-shadow: 0 8px 20px rgba(100,70,30,0.12);
+  }
+
+  /* Results panel */
+  .results-wrap {
+    display: none;
+    margin: 0 12px 20px;
+  }
+
+  .results-wrap.show { display: block; }
+
+  .results-panel {
+    background: var(--white);
+    border: 3px solid var(--sand);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 var(--sand);
+  }
+
+  .results-header {
+    background: linear-gradient(135deg, var(--grass), var(--leaf));
+    padding: 16px 20px;
+    text-align: center;
+  }
+
+  .results-header h2 {
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+    text-shadow: 2px 2px 0 var(--leaf2);
+    margin-bottom: 4px;
+  }
+
+  .results-header p {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .results-body { padding: 16px; }
+
+  /* Stat cards */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .stat-card {
+    background: var(--sand2);
+    border: 2px solid var(--sand);
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+    box-shadow: 2px 2px 0 var(--sand);
+  }
+
+  .stat-emoji { font-size: 20px; display: block; margin-bottom: 4px; }
+  .stat-num { font-size: 26px; font-weight: 900; color: var(--leaf2); display: block; }
+  .stat-lbl { font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-top: 2px; }
+
+  /* Date bars */
+  .r-section-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--brown);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .r-section-title::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--sand);
+    border-radius: 2px;
+  }
+
+  .r-date-item {
+    margin-bottom: 10px;
+  }
+
+  .r-date-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .r-count-badge {
+    background: var(--grass);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 20px;
+    box-shadow: 1px 1px 0 var(--leaf2);
+  }
+
+  .r-bar-bg {
+    background: var(--sand2);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+    border: 1px solid var(--sand);
+  }
+
+  .r-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--grass), var(--grass2));
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(.22,.68,0,1.2);
+  }
+
+  .r-voters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .r-voter {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--sand2);
+    color: var(--brown);
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--sand);
+  }
+
+  /* Allergy detail */
+  .allergy-detail-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--sand);
+    font-size: 13px;
+  }
+
+  .allergy-detail-item:last-child { border-bottom: none; }
+  .allergy-detail-item strong { font-weight: 800; min-width: 55px; color: var(--brown); }
+
+  /* Voter list */
+  .voter-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--sand);
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+
+  .voter-row:last-child { border-bottom: none; }
+  .voter-name { font-weight: 800; color: var(--text); min-width: 55px; }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .tag.drink { background: #FFF0B0; color: #8B6800; border: 1px solid #E5C800; }
+  .tag.veg { background: #E0F5D8; color: var(--leaf2); border: 1px solid var(--grass2); }
+  .tag.allergy { background: #FFE8D8; color: #C04000; border: 1px solid #F09060; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--text);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 800;
+    z-index: 999;
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Decorative flowers */
+  .flower-row {
+    display: flex;
+    gap: 6px;
+    margin: 4px 0 12px;
+    flex-wrap: wrap;
+  }
+
+  .flower { font-size: 16px; animation: sway 3s ease-in-out infinite; }
+  .flower:nth-child(2n) { animation-delay: 0.5s; }
+  .flower:nth-child(3n) { animation-delay: 1s; }
+
+  @keyframes sway {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  /* Bottom decoration */
+  .bottom-deco {
+    background: linear-gradient(to bottom, var(--grass) 0%, var(--grass2) 40%, var(--soil) 100%);
+    height: 50px;
+    margin: 0 12px;
+    border-radius: 0 0 16px 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="clouds">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+</div>
+
+<div class="ground-top">
+  <div class="tile-row" id="tileRow"></div>
+</div>
+
+<div class="container">
+
+  <!-- Sign -->
+  <div class="sign-post">
+    <div class="sign-board">
+      <div class="sign-subtitle">EiMBA ✦ GROUP 7</div>
+      <div class="sign-title">四季會</div>
+      <div class="sign-g7">聚會時間投票 🗓</div>
+      <div class="ditto-float">🟣</div>
+    </div>
+    <div class="sign-pole"></div>
+  </div>
+
+  <!-- Main panel -->
+  <div class="panel">
+
+    <!-- Flowers deco -->
+    <div class="flower-row">
+      <span class="flower">🌸</span><span class="flower">🌼</span>
+      <span class="flower">🌺</span><span class="flower">🌻</span>
+      <span class="flower">🌸</span><span class="flower">🌼</span>
+    </div>
+
+    <!-- Name -->
+    <div class="section-head">
+      <div class="section-icon">👤</div>
+      <div class="section-title">你是誰？</div>
+    </div>
+    <div class="input-box">
+      <input class="name-input" type="text" id="nameInput" placeholder="輸入你的名字 ✏️" maxlength="12">
+    </div>
+
+    <!-- Dates -->
+    <div class="section-head">
+      <div class="section-icon">📅</div>
+      <div class="section-title">選你方便的日期（可多選）</div>
+    </div>
+
+    <div class="month-banner">🌿 五月 May</div>
+    <div class="dates-grid" id="mayGrid"></div>
+
+    <div class="month-banner">☀️ 六月 June</div>
+    <div class="dates-grid" id="junGrid"></div>
+
+    <!-- Prefs -->
+    <div class="section-head">
+      <div class="section-icon">🍽</div>
+      <div class="section-title">飲食需求</div>
+    </div>
+
+    <div class="pref-list">
+      <div class="pref-card" id="pc-drink">
+        <span class="pref-emoji">🍺</span>
+        <div class="pref-info">
+          <div class="pref-name">喝酒</div>
+          <div class="pref-hint">有喝酒需求</div>
+        </div>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="drinkCheck">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="pref-card" id="pc-veg">
+        <span class="pref-emoji">🌿</span>
+        <div class="pref-info">
+          <div class="pref-name">吃素</div>
+          <div class="pref-hint">需要素食選項</div>
+        </div>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="vegCheck">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="pref-card" id="pc-allergy">
+        <span class="pref-emoji">⚠️</span>
+        <div class="pref-info">
+          <div class="pref-name">過敏 / 忌食</div>
+          <div class="pref-hint">有特定食物需迴避</div>
+        </div>
+        <label class="toggle-wrap">
+          <input type="checkbox" id="allergyCheck">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="allergy-expand" id="allergyExpand">
+      <textarea class="allergy-textarea" id="allergyInput" placeholder="請填寫過敏或忌食內容，例如：花生、海鮮、麩質…"></textarea>
+    </div>
+
+  </div>
+
+  <!-- Bottom buttons -->
+  <div class="panel-bottom">
+    <button class="btn-submit" id="submitBtn" onclick="submitVote()">
+      🌟 送出投票
+    </button>
+    <button class="btn-results" onclick="toggleResults()">
+      📊 查看所有人的投票結果
+    </button>
+  </div>
+
+  <!-- Results -->
+  <div class="results-wrap" id="resultsWrap">
+    <div class="results-panel">
+      <div class="results-header">
+        <h2>🏆 投票結果</h2>
+        <p id="totalText">共 0 位成員投票</p>
+      </div>
+      <div class="results-body">
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <span class="stat-emoji">🍺</span>
+            <span class="stat-num" id="r-drink">0</span>
+            <span class="stat-lbl">喝酒</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-emoji">🌿</span>
+            <span class="stat-num" id="r-veg">0</span>
+            <span class="stat-lbl">吃素</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-emoji">⚠️</span>
+            <span class="stat-num" id="r-allergy">0</span>
+            <span class="stat-lbl">過敏忌食</span>
+          </div>
+        </div>
+
+        <div id="allergyDetailWrap" style="display:none; margin-bottom:14px;">
+          <div class="r-section-title">⚠️ 過敏忌食明細</div>
+          <div id="allergyDetailList"></div>
+        </div>
+
+        <div class="r-section-title">📅 日期統計</div>
+        <div id="dateResultList"></div>
+
+        <div class="r-section-title" style="margin-top:14px;">👥 所有成員</div>
+        <div id="voterList"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-deco"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATES = [
+  {k:'2026-05-07',l:'5/7',d:'週四',w:false},{k:'2026-05-08',l:'5/8',d:'週五',w:false},
+  {k:'2026-05-18',l:'5/18',d:'週一',w:false},{k:'2026-05-19',l:'5/19',d:'週二',w:false},
+  {k:'2026-05-21',l:'5/21',d:'週四',w:false},{k:'2026-05-23',l:'5/23',d:'週六',w:true},
+  {k:'2026-05-24',l:'5/24',d:'週日',w:true},{k:'2026-05-26',l:'5/26',d:'週二',w:false},
+  {k:'2026-05-30',l:'5/30',d:'週六',w:true},{k:'2026-05-31',l:'5/31',d:'週日',w:true},
+  {k:'2026-06-04',l:'6/4',d:'週四',w:false},{k:'2026-06-07',l:'6/7',d:'週日',w:true},
+  {k:'2026-06-09',l:'6/9',d:'週二',w:false},{k:'2026-06-11',l:'6/11',d:'週四',w:false},
+  {k:'2026-06-13',l:'6/13',d:'週六',w:true},{k:'2026-06-15',l:'6/15',d:'週一',w:false},
+  {k:'2026-06-16',l:'6/16',d:'週二',w:false},{k:'2026-06-17',l:'6/17',d:'週三',w:false},
+  {k:'2026-06-18',l:'6/18',d:'週四',w:false},{k:'2026-06-22',l:'6/22',d:'週一',w:false},
+  {k:'2026-06-23',l:'6/23',d:'週二',w:false},{k:'2026-06-24',l:'6/24',d:'週三',w:false},
+  {k:'2026-06-25',l:'6/25',d:'週四',w:false},{k:'2026-06-29',l:'6/29',d:'週一',w:false},
+  {k:'2026-06-30',l:'6/30',d:'週二',w:false},
+];
+
+const sel = {};
+let votes = JSON.parse(localStorage.getItem('eimba_g7_v2') || '[]');
+
+// Build tiles
+const tileRow = document.getElementById('tileRow');
+const types = ['grass','soil','grass','grass','soil','stone','grass','soil'];
+for (let i = 0; i < Math.ceil(window.innerWidth / 32) + 2; i++) {
+  const t = document.createElement('div');
+  t.className = 'tile tile-' + types[i % types.length];
+  tileRow.appendChild(t);
+}
+
+function buildCard(d) {
+  const times = d.w
+    ? `<div class="time-row">
+        <span class="time-pill" id="tp-${d.k}-noon" onclick="selTime(event,'${d.k}','noon')">中午</span>
+        <span class="time-pill" id="tp-${d.k}-evening" onclick="selTime(event,'${d.k}','evening')">晚上</span>
+       </div>`
+    : `<div class="time-row"><span class="time-pill active">🌙 晚上</span></div>`;
+  return `
+    <div class="date-card" id="dc-${d.k}" onclick="toggleDate('${d.k}',${d.w})">
+      <div class="date-top">
+        <span class="date-num">${d.l} <small style="font-size:12px;font-weight:700">${d.d}</small></span>
+        <span class="day-chip ${d.w?'weekend':'weekday'}">${d.w?'假日':'平日'}</span>
+      </div>
+      ${times}
+    </div>`;
+}
+
+document.getElementById('mayGrid').innerHTML = DATES.filter(d=>d.k.startsWith('2026-05')).map(buildCard).join('');
+document.getElementById('junGrid').innerHTML = DATES.filter(d=>d.k.startsWith('2026-06')).map(buildCard).join('');
+
+function toggleDate(k, isWeekend) {
+  const card = document.getElementById('dc-'+k);
+  if (sel[k] !== undefined) {
+    delete sel[k];
+    card.classList.remove('selected');
+    if (isWeekend) {
+      ['noon','evening'].forEach(t => document.getElementById('tp-'+k+'-'+t)?.classList.remove('active'));
+    }
+  } else {
+    sel[k] = isWeekend ? null : 'evening';
+    card.classList.add('selected');
+  }
+}
+
+function selTime(e, k, time) {
+  e.stopPropagation();
+  if (sel[k] === undefined) {
+    sel[k] = null;
+    document.getElementById('dc-'+k).classList.add('selected');
+  }
+  const cur = sel[k];
+  if (cur === time) sel[k] = null;
+  else if (cur && cur !== null && cur !== time) sel[k] = 'both';
+  else sel[k] = time;
+  ['noon','evening'].forEach(t => {
+    document.getElementById('tp-'+k+'-'+t)?.classList.toggle('active', sel[k]===t||sel[k]==='both');
+  });
+}
+
+// Toggle pref cards
+['drink','veg','allergy'].forEach(id => {
+  document.getElementById(id+'Check').addEventListener('change', function() {
+    document.getElementById('pc-'+id).classList.toggle('on', this.checked);
+    if (id === 'allergy') document.getElementById('allergyExpand').classList.toggle('show', this.checked);
+  });
+});
+
+function submitVote() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) { toast('🌱 請先輸入你的名字！'); return; }
+  if (!Object.keys(sel).length) { toast('📅 請至少選一個日期！'); return; }
+  if (votes.find(v=>v.name===name)) { toast('✅ 你已經投過票囉！'); return; }
+
+  votes.push({
+    name,
+    dates: Object.keys(sel).map(k=>({date:k,time:sel[k]||'evening'})),
+    drink: document.getElementById('drinkCheck').checked,
+    veg: document.getElementById('vegCheck').checked,
+    allergy: document.getElementById('allergyCheck').checked,
+    allergyNote: document.getElementById('allergyCheck').checked ? document.getElementById('allergyInput').value.trim() : '',
+    ts: Date.now()
+  });
+  localStorage.setItem('eimba_g7_v2', JSON.stringify(votes));
+  toast('🌟 ' + name + ' 投票成功！');
+
+  document.getElementById('nameInput').value = '';
+  Object.keys(sel).forEach(k => delete sel[k]);
+  document.querySelectorAll('.date-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.time-pill').forEach(p => { if (!p.textContent.includes('晚上') || p.closest('.date-card')?.querySelector('.day-chip.weekend')) p.classList.remove('active'); });
+  ['drink','veg','allergy'].forEach(id => {
+    document.getElementById(id+'Check').checked = false;
+    document.getElementById('pc-'+id).classList.remove('on');
+  });
+  document.getElementById('allergyInput').value = '';
+  document.getElementById('allergyExpand').classList.remove('show');
+  if (document.getElementById('resultsWrap').classList.contains('show')) renderResults();
+}
+
+function toggleResults() {
+  const w = document.getElementById('resultsWrap');
+  w.classList.toggle('show');
+  if (w.classList.contains('show')) { renderResults(); setTimeout(()=>w.scrollIntoView({behavior:'smooth',block:'nearest'}),100); }
+}
+
+function renderResults() {
+  votes = JSON.parse(localStorage.getItem('eimba_g7_v2') || '[]');
+  document.getElementById('totalText').textContent = '共 ' + votes.length + ' 位成員投票';
+  document.getElementById('r-drink').textContent = votes.filter(v=>v.drink).length;
+  document.getElementById('r-veg').textContent = votes.filter(v=>v.veg).length;
+  document.getElementById('r-allergy').textContent = votes.filter(v=>v.allergy).length;
+
+  const av = votes.filter(v=>v.allergy&&v.allergyNote);
+  document.getElementById('allergyDetailWrap').style.display = av.length ? 'block' : 'none';
+  document.getElementById('allergyDetailList').innerHTML = av.map(v=>
+    `<div class="allergy-detail-item"><strong>${v.name}</strong><span>${v.allergyNote}</span></div>`
+  ).join('');
+
+  const dc={},dv={};
+  votes.forEach(v=>v.dates.forEach(d=>{
+    dc[d.date]=(dc[d.date]||0)+1;
+    if(!dv[d.date])dv[d.date]=[];
+    dv[d.date].push(v.name);
+  }));
+  const sorted = DATES.map(d=>({...d,count:dc[d.k]||0,voters:dv[d.k]||[]}))
+    .filter(d=>d.count>0).sort((a,b)=>b.count-a.count);
+  const max = Math.max(1,...sorted.map(d=>d.count));
+
+  document.getElementById('dateResultList').innerHTML = sorted.length===0
+    ? '<p style="color:#999;font-size:13px;font-weight:600">還沒有人投票 🌱</p>'
+    : sorted.map(d=>`
+        <div class="r-date-item">
+          <div class="r-date-top">
+            <span>${d.l} ${d.d}${d.w?' ⭐':''}</span>
+            <span class="r-count-badge">${d.count} 票</span>
+          </div>
+          <div class="r-bar-bg"><div class="r-bar-fill" style="width:${d.count/max*100}%"></div></div>
+          <div class="r-voters">${d.voters.map(n=>`<span class="r-voter">${n}</span>`).join('')}</div>
+        </div>`).join('');
+
+  document.getElementById('voterList').innerHTML = votes.length===0
+    ? '<p style="color:#999;font-size:13px;font-weight:600">還沒有人投票 🌱</p>'
+    : votes.map(v=>`
+        <div class="voter-row">
+          <span class="voter-name">${v.name}</span>
+          ${v.drink?'<span class="tag drink">🍺 喝酒</span>':''}
+          ${v.veg?'<span class="tag veg">🌿 素食</span>':''}
+          ${v.allergy?`<span class="tag allergy">⚠️ ${v.allergyNote||'有忌食'}</span>`:''}
+          <span style="margin-left:auto;font-size:11px;color:#999;font-weight:600">${v.dates.length}日</span>
+        </div>`).join('');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
